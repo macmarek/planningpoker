@@ -3,58 +3,65 @@
 }
 
 <div id="no-storage" style="display: none;" class="row">
-    <div  class="alert alert-danger alert-dismissible" role="alert">
+    <div class="alert alert-danger alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-         Your browser does not support local storage. Your user name will not be saved across sessions!
+        Your browser does not support local storage. Your user name will not be saved across sessions!
     </div>
 </div>
 
-<div class="row">
-    <h3>Welcome to voting session <span id="session-id"></span> (expiry time <span id="session-expiry"></span>)</h3>
-    
-    <h2 id="name-info" style="display: none">Your name: <span id="name-info-span"></span></h2>
+<div id="loading-alert" style="display: none" class="alert alert-info" role="alert">
+    <span id="loading-message"></span>
+</div>
 
-    <div id="enter-name">
+<div id="main-wrapper">
+    <div id="info" class="row">
+        <h3>Welcome to voting session <span id="session-id"></span> (expiry time <span id="session-expiry"></span>)</h3>
 
-        <h2>Please enter your name</h2>
-        <div class="form-group">
-            <input type="text" class="form-control" id="member-name" placeholder="Please enter your name" maxlength="50" required>
+        <h2 id="name-info" style="display: none">Your name: <span id="name-info-span"></span></h2>
+
+        <div id="enter-name">
+
+            <h2>Please enter your name</h2>
+            <div class="form-group">
+                <input type="text" class="form-control" id="member-name" placeholder="Please enter your name" maxlength="50" required>
+            </div>
+
+            <div class="form-group">
+                <button id="add-member" class="btn btn-default">Add</button>
+            </div>
         </div>
+    </div>
+
+    <div id="user-vote" style="display: none;" class="row">
+        <div id="add-vote-area">
+            <h2>Vote here</h2>
+            <div class="form-group">
+                <input type="text" class="form-control" id="vote-value" placeholder="Enter your vote" maxlength="10" required>
+            </div>
+
+            <div class="form-group">
+                <button id="add-vote" class="btn btn-default">Vote</button>
+            </div>
+        </div>
+        <div id="vote-status-area">
+            <h3>Your vote: <span id="current-vote-value"></span></h3>
+        </div>
+    </div>
+
+    <div class="row" id="voting-area" style="display: none;">
+        <h3 id="session-status" style="display: none;">Voting in progress...</h3>
+        <h2>Active users</h2>
+
+        <div id="members-list"></div>
 
         <div class="form-group">
-            <button id="add-member" class="btn btn-default">Add</button>
+            <button id="start-voting" class="btn btn-default">Start voting</button>
+            <button id="stop-voting" style="display: none" class="btn btn-default">Stop voting</button>
         </div>
     </div>
 </div>
 
-<div id="user-vote" style="display: none;" class="row">
-    <div id="add-vote-area">
-        <h2>Vote here</h2>
-        <div class="form-group">
-            <input type="text" class="form-control" id="vote-value" placeholder="Enter your vote" maxlength="10" required>
-        </div>
 
-        <div class="form-group">
-            <button id="add-vote" class="btn btn-default">Vote</button>
-        </div>
-    </div>
-    <div id="vote-status-area">
-        <h3>Your vote: <span id="current-vote-value"></span></h3>
-    </div>
-</div>
-
-
-<div class="row" id="voting-area" style="display: none;">
-    <h3 id="session-status" style="display: none;">Voting in progress...</h3>
-    <h2>Active users</h2>
-        
-    <div id="members-list"></div>
-
-    <div class="form-group">
-        <button id="start-voting" class="btn btn-default">Start voting</button>
-        <button id="stop-voting" style="display: none" class="btn btn-default">Stop voting</button>
-    </div>
-</div>
 
 @section scripts {
     <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
@@ -274,7 +281,7 @@
             });
         }
 
-        app.addVote = function () {
+        app.addVote = function() {
             if (!app.session.IsVoting) {
                 return;
             }
@@ -289,18 +296,29 @@
                     MemberId: app.currentMember.Id,
                     Vote: vote
                 },
-                success: function (data) {
+                success: function(data) {
                     app.currentMember.Vote = vote;
                     app.storage.setUserForSession(app.session.ShortId, app.currentMember);
                     app.refreshUserVotingArea();
                     chat.server.refreshMemberList(app.session.ShortId);
                 },
-                error: function () {
+                error: function() {
                     alert("error");
                 },
                 dataType: "json"
             });
-        }
+        };
+
+        app.showLoading = function(message) {
+            $("#loading-alert").show();
+            $("#loading-message").html(message);
+            $("#main-wrapper").hide();
+        };
+
+        app.hideLoading = function() {
+            $("#loading-alert").hide();
+            $("#main-wrapper").show();
+        };
 
         app.LocalStorageWrapper = function() {
 
@@ -352,11 +370,17 @@
                 app.refreshUserVotingArea();
             };
 
+            chat.client.addedToGoupCallback = function(data) {
+                app.hideLoading();
+                app.init();
+            };
+
+
+            app.showLoading("Joining session ...");
             $.connection.hub.start()
                 .done(function() {
                     console.log("hub started ...");
-
-                    app.init();
+                    chat.server.joinGroup(app.session.ShortId);
                 });
         });
     </script>
