@@ -1,0 +1,364 @@
+﻿@{
+    ViewBag.Title = "Voting session";
+}
+
+<div id="no-storage" style="display: none;" class="row">
+    <div  class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+         Your browser does not support local storage. Your user name will not be saved across sessions!
+    </div>
+</div>
+
+<div class="row">
+    <h3>Welcome to voting session <span id="session-id"></span> (expiry time <span id="session-expiry"></span>)</h3>
+    
+    <h2 id="name-info" style="display: none">Your name: <span id="name-info-span"></span></h2>
+
+    <div id="enter-name">
+
+        <h2>Please enter your name</h2>
+        <div class="form-group">
+            <input type="text" class="form-control" id="member-name" placeholder="Please enter your name" maxlength="50" required>
+        </div>
+
+        <div class="form-group">
+            <button id="add-member" class="btn btn-default">Add</button>
+        </div>
+    </div>
+</div>
+
+<div id="user-vote" style="display: none;" class="row">
+    <div id="add-vote-area">
+        <h2>Vote here</h2>
+        <div class="form-group">
+            <input type="text" class="form-control" id="vote-value" placeholder="Enter your vote" maxlength="10" required>
+        </div>
+
+        <div class="form-group">
+            <button id="add-vote" class="btn btn-default">Vote</button>
+        </div>
+    </div>
+    <div id="vote-status-area">
+        <h3>Your vote: <span id="current-vote-value"></span></h3>
+    </div>
+</div>
+
+
+<div class="row" id="voting-area" style="display: none;">
+    <h3 id="session-status" style="display: none;">Voting in progress...</h3>
+    <h2>Active users</h2>
+        
+    <div id="members-list"></div>
+
+    <div class="form-group">
+        <button id="start-voting" class="btn btn-default">Start voting</button>
+        <button id="stop-voting" style="display: none" class="btn btn-default">Stop voting</button>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+
+    <script>
+
+        var chat = null;
+        var app = {};
+        var sessionstring = '@Html.Raw(ViewBag.SessionJson)';
+        console.log(sessionstring);
+        app.session = JSON.parse(sessionstring);
+
+        app.refreshList = function() {
+            var $elem = $("#members-list");
+            if (!app.session.Members) {
+                $elem.html("");
+                return;
+            }
+            var html = "";
+            for (var i = 0; i < app.session.Members.length; i++) {
+                var member = app.session.Members[i];
+                var row = "<div>" + member.Name;
+                if (member.Vote) {
+
+                    var voteText = app.session.IsVoting ? "voted" : member.Vote;
+
+                    row += " (" + voteText + ")";
+                }
+                row += "</div>";
+                html += row;
+            }
+            $elem.html(html);
+        };
+
+        app.init = function() {
+
+            app.storage = new app.LocalStorageWrapper();
+            app.storage.init({
+                errorElement: "#no-storage"
+            });
+            app.currentMember = app.storage.getUserForSession(app.session.ShortId);
+
+            $("#session-id").html(app.session.ShortId);
+            app.setExpirationDate();
+
+            $("#add-member").click(function() {
+                app.addMember();
+            });
+
+            $("#start-voting").click(function() {
+                app.startVoting();
+            });
+
+            $("#stop-voting").click(function() {
+                app.stopVoting();
+            });
+
+            $("#add-vote").click(function () {
+                app.addVote();
+            });
+
+            app.refreshList();
+
+            app.refreshUserInfo();
+
+            app.refreshVotingArea();
+
+            app.refreshUserVotingArea();
+        };
+
+        app.refreshVotingArea = function() {
+
+            if (app.session.IsVoting) {
+                $("#start-voting").hide();
+                $("#stop-voting").show();
+                $("#session-status").show();
+                $("#voting-area").show();
+                $("#members-list").show();
+                $("#enter-name").hide();
+                //$("#enter-name").hide();
+            } else {
+                $("#start-voting").show();
+                $("#stop-voting").hide();
+                $("#session-status").hide();
+                $("#voting-area").show();
+                //$("#enter-name").show()
+            }
+        };
+
+        app.refreshUserInfo = function() {
+            if (app.currentMember) {
+                $("#enter-name").hide();
+                $("#name-info-span").html(app.currentMember.Name);
+                $("#name-info-span").show();
+                $("#name-info").show();
+            } else {
+                $("#enter-name").show();
+                $("#name-info-span").hide();
+                $("#name-info").hide();
+            }
+        };
+
+        app.refreshUserVotingArea = function() {
+            if (app.session.IsVoting) {
+                $("#user-vote").show();
+            } else {
+                $("#user-vote").hide();
+            }
+
+            if (!app.currentMember.Vote) {
+                $("#add-vote-area").show();
+                $("#vote-status-area").hide();
+            } else {
+                $("#add-vote-area").hide();
+                $("#current-vote-value").html(app.currentMember.Vote);
+                $("#vote-status-area").show();
+            }
+        };
+
+        app.addMember = function() {
+            if (app.currentMember != null) {
+                return;
+            }
+
+            var name = $('#member-name').val();
+            if (!name) {
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/api/AddMember",
+                data: { ShortId: app.session.ShortId, Name: name },
+                success: function(data) {
+                    app.currentMember = data;
+                    app.storage.setUserForSession(app.session.ShortId, data);
+                    chat.server.refreshMemberList(app.session.ShortId);
+                    app.refreshUserInfo();
+                    app.refreshUserVotingArea();
+                },
+                error: function() {
+                    alert("could not add member");
+                },
+                dataType: "json"
+            });
+        };
+
+        app.removeCurrentMember = function() {
+            if (!app.currentMember) {
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/api/RemoveMember",
+                data: { ShortId: app.session.ShortId, MemberId: app.currentMember.Id },
+                success: function(data) {
+                    chat.server.refreshMemberList(app.session.ShortId);
+                },
+                error: function() {
+                    console.log("remove failed");
+                },
+                dataType: "json"
+            });
+        };
+
+        app.setExpirationDate = function() {
+            var date = new Date(app.session.ExpireTimeUtc);
+            $("#session-expiry").html(date.toLocaleDateString() + " - " + date.toLocaleTimeString());
+        };
+
+        app.startVoting = function() {
+            if (app.session.IsVoting) {
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/api/StartVoting",
+                data: { ShortId: app.session.ShortId },
+                success: function(data) {
+                    app.session.IsVoting = true;
+                    app.currentMember.Vote = null;
+                    app.refreshVotingArea();
+                    app.refreshUserVotingArea();
+                    chat.server.votingStarted(app.session.ShortId);
+                    //chat.server.refreshMemberList(app.session.ShortId);
+                },
+                error: function() {
+                    alert("error");
+                },
+                dataType: "json"
+            });
+        }
+
+        app.stopVoting = function() {
+            if (!app.session.IsVoting) {
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/api/StopVoting",
+                data: { ShortId: app.session.ShortId },
+                success: function(data) {
+                    app.session.IsVoting = false;
+                    app.refreshUserInfo();
+                    app.refreshVotingArea();
+                    app.refreshUserVotingArea();
+                    chat.server.refreshMemberList(app.session.ShortId);
+                },
+                error: function() {
+                    alert("error");
+                },
+                dataType: "json"
+            });
+        }
+
+        app.addVote = function () {
+            if (!app.session.IsVoting) {
+                return;
+            }
+
+            var vote = $("#vote-value").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/api/Vote",
+                data: {
+                    ShortId: app.session.ShortId,
+                    MemberId: app.currentMember.Id,
+                    Vote: vote
+                },
+                success: function (data) {
+                    app.currentMember.Vote = vote;
+                    app.storage.setUserForSession(app.session.ShortId, app.currentMember);
+                    app.refreshUserVotingArea();
+                    chat.server.refreshMemberList(app.session.ShortId);
+                },
+                error: function () {
+                    alert("error");
+                },
+                dataType: "json"
+            });
+        }
+
+        app.LocalStorageWrapper = function() {
+
+            this.init = function(config) {
+                var storageSupported = typeof (Storage) !== "undefined";
+                if (!storageSupported) {
+                    var $elem = $(config.errorElement);
+                    $elem.show();
+                }
+            }
+
+            this.getUserForSession = function(shortId) {
+                var itemString = localStorage.getItem(shortId + "user");
+                if (!itemString) {
+                    return null;
+                }
+                return JSON.parse(itemString);
+            };
+
+            this.setUserForSession = function(shortId, user) {
+                var json = JSON.stringify(user);
+                localStorage.setItem(shortId + "user", json);
+            }
+        };
+
+
+        $(function() {
+            chat = $.connection.pokerHub;
+
+            chat.client.refreshMemberListCallback = function(data) {
+                app.session = data;
+
+                app.refreshList();
+
+                app.refreshUserInfo();
+
+                app.refreshVotingArea();
+
+                app.refreshUserVotingArea();
+            };
+
+            chat.client.votingStartedCallback = function (data) {
+
+                app.session = data;
+
+                app.currentMember.Vote = null;
+                app.refreshUserInfo();
+                app.refreshVotingArea();
+                app.refreshUserVotingArea();
+            };
+
+            $.connection.hub.start()
+                .done(function() {
+                    console.log("hub started ...");
+
+                    app.init();
+                });
+        });
+    </script>
+}
+

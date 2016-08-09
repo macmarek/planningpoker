@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Planning Poker</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Getting started</h2>
+        <p>
+            In order to start, create new session and then send session link to all your team members.
+        </p>
+
+        <p>
+            <a id="new-session" class="btn btn-default" href="#">Create new session</a>
+        </p>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+    $(function() {
+
+        var pp = {};
+
+        $("#new-session")
+            .click(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "/api/Create",
+                    data: { UserName: "marek", Title : "test"},
+                    success: function(data) {
+                        window.location.href = "/session/"+data.ShortId;
+                    },
+                    error:function() {
+                        alert("could not create session");
+                    },
+                    dataType: "json"
+                });
+
+
+            });
+
+    });
+
+</script>
+}
