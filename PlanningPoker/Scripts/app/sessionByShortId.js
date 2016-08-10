@@ -10,7 +10,8 @@ app.refreshList = function () {
     var html = "";
     for (var i = 0; i < app.session.Members.length; i++) {
         var member = app.session.Members[i];
-        var row = "<tr><td>" + i+1 +"</td>" +
+        var num = i + 1;
+        var row = "<tr><td>" + num +"</td>" +
             "<td>" + member.Name + "</td><td>";
         if (member.Vote) {
             var voteText = app.session.IsVoting ? "voted" : member.Vote;
