@@ -85,6 +85,8 @@ app.refreshUserInfo = function () {
     if (app.currentMember) {
         $("#enter-name").hide();
         $("#name-info-span").html(app.currentMember.Name);
+        var adminStatus = app.currentMember.IsAdmin ? "You are admin of this session" : "You are guest of this session";
+        $("#admin-status").html(adminStatus);
         $("#name-info-span").show();
         $("#name-info").show();
     } else {
