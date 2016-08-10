@@ -50,6 +50,11 @@ namespace PlanningPoker.Services.Dao
                 Name = name
             };
 
+            if (session.Members.Count == 0)
+            {
+                member.IsAdmin = true;
+            }
+
             session.Members.Add(member);
 
             return member;
@@ -70,9 +75,15 @@ namespace PlanningPoker.Services.Dao
 
         }
 
-        public static void StartVoting(string shortId)
+        public static void StartVoting(string shortId, Guid memberId)
         {
             var session = all.First(x => x.ShortId == shortId);
+            var callingMamber = GetMemberById(session, memberId);
+            if (!callingMamber.IsAdmin)
+            {
+                throw new ArgumentException("non admin can't start voting");
+            }
+
             foreach (var member in session.Members)
             {
                 member.Vote = null;
@@ -80,10 +91,20 @@ namespace PlanningPoker.Services.Dao
             session.IsVoting = true;
         }
 
-        public static void StopVoting(string shortId)
+        public static void StopVoting(string shortId, Guid memberId)
         {
             var session = all.First(x => x.ShortId == shortId);
+            var callingMamber = GetMemberById(session, memberId);
+            if (!callingMamber.IsAdmin)
+            {
+                throw new ArgumentException("non admin can't stop voting");
+            }
             session.IsVoting = false;
+        }
+
+        private static TeamMember GetMemberById(Session session, Guid memberId)
+        {
+            return session.Members.First(x => x.Id == memberId);
         }
     }
 }

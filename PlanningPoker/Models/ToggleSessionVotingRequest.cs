@@ -6,5 +6,6 @@ namespace PlanningPoker.Models
     {
         public string ShortId { get; set; }
         public bool IsVoting { get; set; }
+        public Guid MemberId { get; set; }
     }
 }

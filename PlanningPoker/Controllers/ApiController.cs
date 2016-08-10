@@ -39,14 +39,14 @@ namespace PlanningPoker.Controllers
         [HttpPost]
         public JsonResult StartVoting(ToggleSessionVotingRequest req)
         {
-            StaticSessionsDao.StartVoting(req.ShortId);
+            StaticSessionsDao.StartVoting(req.ShortId, req.MemberId);
             return Json("ok");
         }
 
         [HttpPost]
         public JsonResult StopVoting(ToggleSessionVotingRequest req)
         {
-            StaticSessionsDao.StopVoting(req.ShortId);
+            StaticSessionsDao.StopVoting(req.ShortId, req.MemberId);
             return Json("ok");
         }
 

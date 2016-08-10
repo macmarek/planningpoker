@@ -58,6 +58,8 @@ app.init = function () {
     app.refreshVotingArea();
 
     app.refreshUserVotingArea();
+
+    app.refreshVotingButtons();
 };
 
 app.refreshVotingArea = function () {
@@ -114,6 +116,20 @@ app.refreshUserVotingArea = function () {
     }
 };
 
+app.refreshVotingButtons = function() {
+    if (!app.currentMember) {
+        $("#voting-buttons").hide();
+        return;
+    }
+
+    if (!app.currentMember.IsAdmin) {
+        $("#voting-buttons").hide();
+        return;
+    }
+
+    $("#voting-buttons").show();
+};
+
 app.addMember = function () {
     if (app.currentMember != null) {
         return;
@@ -134,6 +150,7 @@ app.addMember = function () {
             chat.server.refreshMemberList(app.session.ShortId);
             app.refreshUserInfo();
             app.refreshUserVotingArea();
+            app.refreshVotingButtons();
         },
         error: function () {
             alert("could not add member");
@@ -174,7 +191,7 @@ app.startVoting = function () {
     $.ajax({
         type: "POST",
         url: "/api/StartVoting",
-        data: { ShortId: app.session.ShortId },
+        data: { ShortId: app.session.ShortId, MemberId: app.currentMember.Id },
         success: function (data) {
             app.session.IsVoting = true;
             app.currentMember.Vote = null;
@@ -198,7 +215,7 @@ app.stopVoting = function () {
     $.ajax({
         type: "POST",
         url: "/api/StopVoting",
-        data: { ShortId: app.session.ShortId },
+        data: { ShortId: app.session.ShortId, MemberId: app.currentMember.Id },
         success: function (data) {
             app.session.IsVoting = false;
             app.refreshUserInfo();
