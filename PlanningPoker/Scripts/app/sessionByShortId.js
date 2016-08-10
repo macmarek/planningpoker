@@ -4,22 +4,23 @@ app.refreshList = function () {
     var $elem = $("#members-list");
     if (!app.session.Members) {
         $elem.html("");
+        $("#users-table").hide();
         return;
     }
     var html = "";
     for (var i = 0; i < app.session.Members.length; i++) {
         var member = app.session.Members[i];
-        var row = "<div>" + member.Name;
+        var row = "<tr><td>" + i+1 +"</td>" +
+            "<td>" + member.Name + "</td><td>";
         if (member.Vote) {
-
             var voteText = app.session.IsVoting ? "voted" : member.Vote;
-
-            row += " (" + voteText + ")";
+            row += voteText;
         }
-        row += "</div>";
+        row += "</td></tr>";
         html += row;
     }
     $elem.html(html);
+    $("#users-table").show();
 };
 
 app.init = function () {
@@ -95,6 +96,11 @@ app.refreshUserVotingArea = function () {
         $("#user-vote").show();
     } else {
         $("#user-vote").hide();
+    }
+
+    if (!app.currentMember) {
+        $("#user-vote").hide();
+        return;
     }
 
     if (!app.currentMember.Vote) {

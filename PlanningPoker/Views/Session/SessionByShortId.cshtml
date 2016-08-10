@@ -13,55 +13,94 @@
     <span id="loading-message"></span>
 </div>
 
+<div id="session-status" style="display: none;" class="alert alert-info alert-dismissible" role="alert">Voting in progress...</div>
+
 <div id="main-wrapper">
+
     <div id="info" class="row">
-        <h3>Welcome to voting session <span id="session-id"></span> (expiry time <span id="session-expiry"></span>)</h3>
+        <div class="col-md-12">
+            <h3>Session <span id="session-id"></span></h3>
+            <p>This session wil expire <span id="session-expiry"></span></p>
 
-        <h2 id="name-info" style="display: none">Your name: <span id="name-info-span"></span></h2>
+            <h3 id="name-info" style="display: none">Name: <span id="name-info-span"></span></h3>
+        </div>
+    </div>
 
-        <div id="enter-name">
-
-            <h2>Please enter your name</h2>
-            <div class="form-group">
-                <input type="text" class="form-control" id="member-name" placeholder="Please enter your name" maxlength="50" required>
-            </div>
-
-            <div class="form-group">
-                <button id="add-member" class="btn btn-default">Add</button>
+    <div class="row" id="enter-name">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Please enter your name</h3>
+                </div>
+                <div class="panel-body">
+                    <fieldset>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="member-name" placeholder="Please enter your name" maxlength="50" required autofocus>
+                        </div>
+                           
+                        <button id="add-member" class="btn btn-lg btn-success btn-block">Add</button>
+                    </fieldset>
+                </div>
             </div>
         </div>
     </div>
+
 
     <div id="user-vote" style="display: none;" class="row">
-        <div id="add-vote-area">
-            <h2>Vote here</h2>
-            <div class="form-group">
-                <input type="text" class="form-control" id="vote-value" placeholder="Enter your vote" maxlength="10" required>
+        <div class="col-md-4">
+            <div id="add-vote-area">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Vote here</h3>
+                    </div>
+                    <div class="panel-body">
+                        <fieldset>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="vote-value" placeholder="Enter your vote" maxlength="10" required>
+                            </div>
+
+                            <button id="add-vote" class="btn btn-lg btn-success btn-block">Vote</button>
+                        </fieldset>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="form-group">
-                <button id="add-vote" class="btn btn-default">Vote</button>
+            <div id="vote-status-area">
+                <h3>Vote: <span id="current-vote-value"></span></h3>
             </div>
-        </div>
-        <div id="vote-status-area">
-            <h3>Your vote: <span id="current-vote-value"></span></h3>
+
         </div>
     </div>
 
-    <div class="row" id="voting-area" style="display: none;">
-        <h3 id="session-status" style="display: none;">Voting in progress...</h3>
-        <h2>Active users</h2>
+    <div id="voting-area" style="display: none;">
+        <div class="row">
+            <div id="users-table" class="col-md-8" style="display: none;">
 
-        <div id="members-list"></div>
+                <table class="table">
+                    <caption>Users</caption>
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>name</th>
+                        <th>vote</th>
+                    </tr>
+                    </thead>
+                    <tbody id="members-list"></tbody>
+                </table>
 
-        <div class="form-group">
-            <button id="start-voting" class="btn btn-default">Start voting</button>
-            <button id="stop-voting" style="display: none" class="btn btn-default">Stop voting</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <button id="start-voting" class="btn btn-lg btn-success btn-block">Start voting</button>
+                <button id="stop-voting" style="display: none" class="btn btn-lg btn-success btn-block">Stop voting</button>
+            </div>
         </div>
     </div>
+
 </div>
-
-
 
 @section scripts {
     <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
