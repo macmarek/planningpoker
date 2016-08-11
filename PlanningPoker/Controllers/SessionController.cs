@@ -12,7 +12,7 @@ namespace PlanningPoker.Controllers
 
             if (session == null)
             {
-                return new HttpNotFoundResult();
+                return View("SessionNotFound");
             }
 
             ViewBag.SessionJson = JsonConvert.SerializeObject(session);

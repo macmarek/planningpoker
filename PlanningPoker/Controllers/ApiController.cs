@@ -7,7 +7,6 @@ namespace PlanningPoker.Controllers
 {
     public class ApiController : Controller
     { 
-
         [HttpPost]
         public JsonResult Create(CreateSessionRequest req)
         {

@@ -1,6 +1,4 @@
 ﻿using System.Web.Mvc;
-using PlanningPoker.Models;
-using PlanningPoker.Services.Dao;
 
 namespace PlanningPoker.Controllers
 {
@@ -14,6 +12,6 @@ namespace PlanningPoker.Controllers
         public ActionResult Chat()
         {
             return View();
-        }
+        } 
     }
 }

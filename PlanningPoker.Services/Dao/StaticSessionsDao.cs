@@ -106,6 +106,18 @@ namespace PlanningPoker.Services.Dao
         {
             return session.Members.First(x => x.Id == memberId);
         }
+
+        public static void RemoveExpiredSessions()
+        {
+            var now = DateTime.UtcNow;
+            foreach (var session in all)
+            {
+                if (session.ExpireTimeUtc < now)
+                {
+                    all.Remove(session);
+                }
+            }
+        }
     }
 }
 

@@ -1,11 +1,11 @@
 ﻿@{
-    ViewBag.Title = "Hello!";
+    ViewBag.Title = "Oops";
 }
 
 <div class="row">
     <div class="col-md-12">
-        <div class="alert alert-info" role="alert">
-            In order to start, create new session and then send session link to all your team members.
+        <div class="alert alert-danger" role="alert">
+            Oops. The session you are looking for has expired or doesn't exist.
         </div>
 
         <div class="col-md-4 col-md-offset-4">
@@ -15,5 +15,5 @@
 </div>
 
 @section scripts{
-    @Scripts.Render("~/bundles/newsession")
+   @Scripts.Render("~/bundles/newsession")
 }

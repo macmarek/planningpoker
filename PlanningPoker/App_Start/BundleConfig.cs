@@ -31,6 +31,8 @@ namespace PlanningPoker
                       "~/Scripts/app/sessionByShortId.js"));
 
 
+            bundles.Add(new ScriptBundle("~/bundles/newsession").Include(
+                      "~/Scripts/app/newSession.js"));
         }
     }
 }
