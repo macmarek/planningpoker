@@ -169,13 +169,13 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="img\icon.ico" />
     <Content Include="img\icon.png" />
     <Content Include="img\icon24.png" />
+    <Content Include="Scripts\app\why.js" />
     <Content Include="Scripts\app\newSession.js" />
     <Content Include="Scripts\app\sessionByShortId.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -210,6 +210,7 @@
     <Content Include="Views\Session\SessionByShortId.cshtml" />
     <Content Include="Views\Session\SessionNotFound.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
+    <None Include="Views\Home\Why.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

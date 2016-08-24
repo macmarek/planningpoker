@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Why?";
+}
+
+<div class="row">
+    <div class="col-md-12">
+
+        <h2>Why we created this?</h2>
+
+        <p>
+            We are a distributed SCRUM team and we are having most of meetings online.
+            During refinement meeting, we usually vote to estimete PBI's.
+            When the team is ready to vote, every team member is supposed to write his/her vote in the meeting chat window.
+            Ideally, everyone should put their votes at the same time and don't look at other people's choices.
+        </p>
+
+        <p>
+            Unfortunately this was not the case.
+            We often had a situation, where 1'st vote was put by a person, who had most of knowledge about given area.
+            All other people just followed the lead and put the same vote.
+            This resulted in situation, where we did't have enough discussion about given problem, and we silently ignored it:)
+        </p>
+
+        <div class="alert alert-info" role="alert">
+            So basically, our voting looked like this:<br /><span id="voting"></span>
+        </div>
+
+        <p>
+            This is why we created this simple voting app, where votes are not shown until voting is finished.
+            <br/>
+            It's very simple, but it improved our voting process and estimations quality in general.
+        </p>
+    </div>
+</div>
+
+
+@section scripts{
+    @Scripts.Render("~/bundles/why")
+}

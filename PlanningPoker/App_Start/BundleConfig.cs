@@ -33,6 +33,10 @@ namespace PlanningPoker
 
             bundles.Add(new ScriptBundle("~/bundles/newsession").Include(
                       "~/Scripts/app/newSession.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/why").Include(
+                     "~/Scripts/app/why.js"));
+
         }
     }
 }

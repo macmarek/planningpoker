@@ -20,6 +20,12 @@ namespace PlanningPoker
            );
 
             routes.MapRoute(
+               name: "why",
+               url: "why",
+               defaults: new { controller = "Home", action = "Why"}
+           );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

@@ -12,6 +12,11 @@ namespace PlanningPoker.Controllers
         public ActionResult Chat()
         {
             return View();
+        }
+
+        public ActionResult Why()
+        {
+            return View();
         } 
     }
 }
