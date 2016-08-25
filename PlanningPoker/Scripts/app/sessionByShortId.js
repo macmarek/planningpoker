@@ -2,7 +2,7 @@
 
 app.refreshList = function () {
     var $elem = $("#members-list");
-    if (!app.session.Members) {
+    if (!app.session.Members || app.session.Members.length === 0) {
         $elem.html("");
         $("#users-table").hide();
         return;
@@ -200,6 +200,7 @@ app.startVoting = function () {
             app.refreshVotingArea();
             app.refreshUserVotingArea();
             chat.server.votingStarted(app.session.ShortId);
+            $("#vote-value").val("");
             //chat.server.refreshMemberList(app.session.ShortId);
         },
         error: function () {
