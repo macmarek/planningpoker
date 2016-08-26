@@ -33,6 +33,7 @@ app.init = function () {
     app.currentMember = app.storage.getUserForSession(app.session.ShortId);
 
     $("#session-id").html(app.session.ShortId);
+    $("#session-url").html(window.location.href);
     app.setExpirationDate();
 
     $("#add-member").click(function () {

@@ -1,0 +1,45 @@
+﻿@model PlanningPoker.Services.Model.Session
+
+
+@{
+    ViewBag.Title = Model.ShortId;
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-info" role="alert">
+            <div>ShortId: @Model.ShortId</div>
+            <div>Members count: @Model.Members.Count</div>
+            <div>Expiry date: @Html.ExpiryDate(Model.ExpireTimeUtc)</div>
+        </div>
+    </div>
+</div>
+
+<div><a href="@Url.AuthUrl("Index")">Back</a></div>
+
+<table class="table">
+
+    <caption>Members</caption>
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Vote</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    @foreach (var member in Model.Members)
+    {
+        <tr>
+            <td>@member.Id</td>
+            <td>@member.Name</td>
+            <td>@member.Vote</td>
+        </tr>
+    }
+
+    </tbody>
+</table>
+
+<div><a href="@Url.AuthUrl("Index")">Back</a></div>

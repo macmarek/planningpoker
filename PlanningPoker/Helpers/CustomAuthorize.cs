@@ -14,7 +14,7 @@ namespace PlanningPoker.Helpers
                 return false;
             }
 
-            if (auth != "rafaltokon")
+            if (auth != Constants.AuthPassword)
             {
                 return false;
             }

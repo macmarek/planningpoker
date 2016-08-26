@@ -21,5 +21,11 @@ namespace PlanningPoker.Controllers
 
             return Json("ok", JsonRequestBehavior.AllowGet);
         }
+
+        public ViewResult SessionDetails(string shortId)
+        {
+            var session = StaticSessionsDao.GetByShortId(shortId);
+            return View(session);
+        }
     }
 }

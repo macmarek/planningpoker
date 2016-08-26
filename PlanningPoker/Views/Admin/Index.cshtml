@@ -26,6 +26,7 @@
         <th>ShortId</th>
         <th>Members</th>
         <th>Expires</th>
+        <th>Details</th>
     </tr>
     </thead>
     <tbody>
@@ -35,7 +36,8 @@
         <tr>
             <td>@session.ShortId</td>
             <td>@session.Members.Count</td>
-            <td>@session.ExpireTimeUtc.ToString("dd.MM.yyyy HH:mm:ss") UTC</td>
+            <td>@Html.ExpiryDate(session.ExpireTimeUtc)</td>
+            <td><a href="@Url.AuthUrl("SessionDetails", new {shortId=session.ShortId})">details...</a></td>
         </tr>
     }
 
