@@ -42,6 +42,8 @@ app.init = function () {
         app.addMember();
     });
 
+    app.listenForEnterFor("#member-name", "#add-member");
+
     $("#start-voting").click(function () {
         app.startVoting();
     });
@@ -53,6 +55,8 @@ app.init = function () {
     $("#add-vote").click(function () {
         app.addVote();
     });
+
+    app.listenForEnterFor("#vote-value", "#add-vote");
 
     $("#copy-to-cb").click(function() {
         try {
@@ -69,6 +73,10 @@ app.init = function () {
         }
     });
 
+    $("#session-url").focus(function () {
+        $(this).select();
+    });
+
     app.refreshList();
 
     app.refreshUserInfo();
@@ -78,6 +86,14 @@ app.init = function () {
     app.refreshUserVotingArea();
 
     app.refreshVotingButtons();
+};
+
+app.listenForEnterFor = function(listenOn, triggerClickOn) {
+    $(listenOn).bind('keypress', function (event) {
+        if (event.keyCode === 13) {
+            $(triggerClickOn).trigger('click');
+        }
+    });
 };
 
 app.refreshVotingArea = function () {
@@ -126,6 +142,7 @@ app.refreshUserVotingArea = function () {
 
     if (!app.currentMember.Vote) {
         $("#add-vote-area").show();
+        $("#vote-value").focus();
         $("#vote-status-area").hide();
     } else {
         $("#add-vote-area").hide();
@@ -216,8 +233,6 @@ app.startVoting = function () {
             app.refreshVotingArea();
             app.refreshUserVotingArea();
             chat.server.votingStarted(app.session.ShortId);
-            $("#vote-value").val("");
-            //chat.server.refreshMemberList(app.session.ShortId);
         },
         error: function () {
             alert("error");
