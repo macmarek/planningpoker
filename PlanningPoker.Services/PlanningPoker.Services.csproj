@@ -44,7 +44,6 @@
     <Compile Include="Helpers\RandomIdGenerator.cs" />
     <Compile Include="Model\Session.cs" />
     <Compile Include="Model\TeamMember.cs" />
-    <Compile Include="SessionService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

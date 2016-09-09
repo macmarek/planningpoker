@@ -17,87 +17,100 @@
 
 <div id="main-wrapper" style="display: none;">
 
-    <div id="info" class="row">
-        <div class="col-md-12">
-            <h3>Session <span id="session-id"></span></h3>
-            <h3>Session url: <span id="session-url"></span></h3>
-            <p>This session wil expire <span id="session-expiry"></span></p>
+    <div class="row">
+        <div class="col-md-7">
 
-            <h4 id="name-info" style="display: none">Your name: <span id="name-info-span"></span></h4>
-            <p><span id="admin-status"></span></p>
-        </div>
-    </div>
+            <div class="row" id="enter-name">
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <fieldset>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="member-name" placeholder="Please enter your name" maxlength="50" required autofocus>
+                                </div>
 
-    <div class="row" id="enter-name">
-        <div class="col-md-3">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Please enter your name</h3>
-                </div>
-                <div class="panel-body">
-                    <fieldset>
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="member-name" placeholder="Please enter your name" maxlength="50" required autofocus>
+                                <button id="add-member" class="btn btn-lg btn-success btn-block">Join</button>
+                            </fieldset>
                         </div>
-                           
-                        <button id="add-member" class="btn btn-lg btn-success btn-block">Join</button>
-                    </fieldset>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div id="user-vote" style="display: none;" class="row">
-        <div class="col-md-3">
-            <div id="add-vote-area">
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Vote here</h3>
                     </div>
-                    <div class="panel-body">
-                        <fieldset>
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="vote-value" placeholder="Enter your vote" maxlength="10" required>
+                </div>
+                <div class="col-md-6"></div>
+            </div>
+
+            <div id="user-vote" style="display: none;" class="row">
+                <div class="col-md-6">
+                    <div id="add-vote-area">
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Vote here</h3>
                             </div>
+                            <div class="panel-body">
+                                <fieldset>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="vote-value" placeholder="Enter your vote" maxlength="10" required>
+                                    </div>
 
-                            <button id="add-vote" class="btn btn-lg btn-success btn-block">Vote</button>
-                        </fieldset>
+                                    <button id="add-vote" class="btn btn-lg btn-success btn-block">Vote</button>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div id="vote-status-area">
+                        <h3>Your vote: <span id="current-vote-value"></span></h3>
                     </div>
                 </div>
-
+                <div class="col-md-6"></div>
             </div>
 
-            <div id="vote-status-area">
-                <h3>Your vote: <span id="current-vote-value"></span></h3>
+            <div id="voting-area" style="display: none;">
+                <div class="row">
+                    <div id="users-table" class="col-md-12" style="display: none;">
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>name</th>
+                                    <th>vote</th>
+                                </tr>
+                            </thead>
+                            <tbody id="members-list"></tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="row" id="voting-buttons">
+                    <div class="col-md-6">
+                        <button id="start-voting" class="btn btn-lg btn-success btn-block">Let's vote!</button>
+                        <button id="stop-voting" style="display: none" class="btn btn-lg btn-success btn-block">Stop voting</button>
+                    </div>
+                </div>
             </div>
+
 
         </div>
-    </div>
 
-    <div id="voting-area" style="display: none;">
-        <div class="row">
-            <div id="users-table" class="col-md-8" style="display: none;">
+        <div class="col-md-5">
+            <div class="card">
+            <h3 class="card-header primary-color white-text">Session details</h3>
+            <div class="card-block">
+                <h4>Session <span id="session-id"></span></h4>
+                <p><span id="session-url"></span></p>
+                <p>This session wil expire <span id="session-expiry"></span></p>
 
-                <table class="table">
-                    <caption>Users</caption>
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>name</th>
-                        <th>vote</th>
-                    </tr>
-                    </thead>
-                    <tbody id="members-list"></tbody>
-                </table>
 
             </div>
         </div>
-        <div class="row" id="voting-buttons">
-            <div class="col-md-2">
-                <button id="start-voting" class="btn btn-lg btn-success btn-block">Let's vote!</button>
-                <button id="stop-voting" style="display: none" class="btn btn-lg btn-success btn-block">Stop voting</button>
+            
+            <div class="card">
+                <h3 class="card-header primary-color white-text">User details</h3>
+                <div class="card-block">
+                    <h4 id="name-info" style="display: none">Your name: <span id="name-info-span"></span></h4>
+                    <p><span id="admin-status"></span></p>
+                </div>
             </div>
         </div>
     </div>
