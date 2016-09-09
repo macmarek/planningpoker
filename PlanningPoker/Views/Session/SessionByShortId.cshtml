@@ -98,10 +98,14 @@
             <h3 class="card-header primary-color white-text">Session details</h3>
             <div class="card-block">
                 <h4>Session <span id="session-id"></span></h4>
-                <p><span id="session-url"></span></p>
                 <p>This session wil expire <span id="session-expiry"></span></p>
-
-
+                <p>
+                    <input value="" type="text" id="session-url" class="form-control">
+                    
+                    <button id="copy-to-cb" type="button" class="btn btn-sm btn-elegant">
+                        <i id="copied-to-cb" class="fa fa-square-o left"></i> Copy to clipboard
+                    </button>
+                </p>
             </div>
         </div>
             

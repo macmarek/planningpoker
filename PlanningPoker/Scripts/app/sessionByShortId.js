@@ -33,7 +33,7 @@ app.init = function () {
     app.currentMember = app.storage.getUserForSession(app.session.ShortId);
 
     $("#session-id").html(app.session.ShortId);
-    $("#session-url").html(window.location.href);
+    $("#session-url").val(window.location.href);
     app.setExpirationDate();
 
     $("#session-details").show();
@@ -52,6 +52,21 @@ app.init = function () {
 
     $("#add-vote").click(function () {
         app.addVote();
+    });
+
+    $("#copy-to-cb").click(function() {
+        try {
+            $("#session-url").select();
+            var successful = document.execCommand('copy');
+            if (!successful) {
+                alert("Unable to copy. Plase copy it manually.");
+            } else {
+                $("#copied-to-cb").removeClass("fa-square-o");
+                $("#copied-to-cb").addClass("fa-check-square-o");
+            }
+        } catch (err) {
+            alert("Unable to copy. Plase copy it manually.");
+        }
     });
 
     app.refreshList();
