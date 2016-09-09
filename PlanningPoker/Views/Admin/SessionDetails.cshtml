@@ -1,6 +1,5 @@
 ﻿@model PlanningPoker.Services.Model.Session
 
-
 @{
     ViewBag.Title = Model.ShortId;
 }
@@ -16,30 +15,32 @@
     </div>
 </div>
 
-<div><a href="@Url.AuthUrl("Index")">Back</a></div>
+<div class="row">
+    <div><a href="@Url.AuthUrl("Index")">Back</a></div>
 
-<table class="table">
+    <h3>Members</h3>
 
-    <caption>Members</caption>
-    <thead>
-    <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Vote</th>
-    </tr>
-    </thead>
-    <tbody>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Vote</th>
+            </tr>
+        </thead>
+        <tbody>
 
-    @foreach (var member in Model.Members)
-    {
-        <tr>
-            <td>@member.Id</td>
-            <td>@member.Name</td>
-            <td>@member.Vote</td>
-        </tr>
-    }
+            @foreach (var member in Model.Members)
+            {
+                <tr>
+                    <td>@member.Id</td>
+                    <td>@member.Name</td>
+                    <td>@member.Vote</td>
+                </tr>
+            }
 
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
-<div><a href="@Url.AuthUrl("Index")">Back</a></div>
+    <div><a href="@Url.AuthUrl("Index")">Back</a></div>
+</div>

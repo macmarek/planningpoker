@@ -4,65 +4,66 @@
     ViewBag.Title = "Admin";
 }
 
-
-
 <div class="row">
     <div class="col-md-12">
         <div class="alert alert-info" role="alert">
             Sessions count: @Model.Count()
         </div>
 
-        <div class="col-md-4 col-md-offset-4">
+        <div class="col-md-4">
             <button id="expire" class="btn btn-lg btn-success btn-block">Expire</button>
         </div>
     </div>
 </div>
 
-<table class="table">
+<div class="row">
+    <h3>Top 100 sessions</h3>
 
-    <caption>Top 100 sessions</caption>
-    <thead>
-    <tr>
-        <th>ShortId</th>
-        <th>Members</th>
-        <th>Expires</th>
-        <th>Details</th>
-    </tr>
-    </thead>
-    <tbody>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ShortId</th>
+                <th>Members</th>
+                <th>Expires</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
 
-    @foreach (var session in Model)
-    {
-        <tr>
-            <td>@session.ShortId</td>
-            <td>@session.Members.Count</td>
-            <td>@Html.ExpiryDate(session.ExpireTimeUtc)</td>
-            <td><a href="@Url.AuthUrl("SessionDetails", new {shortId=session.ShortId})">details...</a></td>
-        </tr>
-    }
+            @foreach (var session in Model)
+            {
+                <tr>
+                    <td>@session.ShortId</td>
+                    <td>@session.Members.Count</td>
+                    <td>@Html.ExpiryDate(session.ExpireTimeUtc)</td>
+                    <td><a href="@Url.AuthUrl("SessionDetails", new {shortId=session.ShortId})">details...</a></td>
+                </tr>
+            }
 
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 
-@section scripts{
-    <script type="text/javascript">
-        
-        $(function () {
-            $("#expire")
-                .click(function () {
-                    $.ajax({
-                        type: "GET",
-                        url: "/admin/expiresessions?auth=rafaltokon",
-                        success: function (data) {
-                            alert("done!");
-                        },
-                        error: function () {
-                            alert("error");
-                        },
-                        dataType: "json"
+  
+    @section scripts{
+        <script type="text/javascript">
+
+            $(function () {
+                $("#expire")
+                    .click(function () {
+                        $.ajax({
+                            type: "GET",
+                            url: "/admin/expiresessions?auth=rafaltokon",
+                            success: function (data) {
+                                alert("done!");
+                            },
+                            error: function () {
+                                alert("error");
+                            },
+                            dataType: "json"
+                        });
                     });
-                });
-        });
+            });
 
-    </script>
-}
+        </script>
+    }

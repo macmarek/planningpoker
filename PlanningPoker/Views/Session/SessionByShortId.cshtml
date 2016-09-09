@@ -29,7 +29,7 @@
                                     <input type="text" class="form-control" id="member-name" placeholder="Please enter your name" maxlength="50" required autofocus>
                                 </div>
 
-                                <button id="add-member" class="btn btn-lg btn-success btn-block">Join</button>
+                                <button id="add-member" class="btn btn-lg btn-primary btn-block">Join</button>
                             </fieldset>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                                         <input type="text" class="form-control" id="vote-value" placeholder="Enter your vote" maxlength="10" required>
                                     </div>
 
-                                    <button id="add-vote" class="btn btn-lg btn-success btn-block">Vote</button>
+                                    <button id="add-vote" class="btn btn-lg btn-primary btn-block">Vote</button>
                                 </fieldset>
                             </div>
                         </div>
@@ -84,8 +84,8 @@
                 </div>
                 <div class="row" id="voting-buttons">
                     <div class="col-md-6">
-                        <button id="start-voting" class="btn btn-lg btn-success btn-block">Let's vote!</button>
-                        <button id="stop-voting" style="display: none" class="btn btn-lg btn-success btn-block">Stop voting</button>
+                        <button id="start-voting" class="btn btn-lg btn-secondary btn-block">Let's vote!</button>
+                        <button id="stop-voting" style="display: none" class="btn btn-lg btn-secondary btn-block">Stop voting</button>
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@
 
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md-5" id="session-details" style="display: none;">
             <div class="card">
             <h3 class="card-header primary-color white-text">Session details</h3>
             <div class="card-block">
@@ -105,10 +105,10 @@
             </div>
         </div>
             
-            <div class="card">
+            <div class="card" id="name-info" style="display: none">
                 <h3 class="card-header primary-color white-text">User details</h3>
                 <div class="card-block">
-                    <h4 id="name-info" style="display: none">Your name: <span id="name-info-span"></span></h4>
+                    <h4>Your name: <span id="name-info-span"></span></h4>
                     <p><span id="admin-status"></span></p>
                 </div>
             </div>

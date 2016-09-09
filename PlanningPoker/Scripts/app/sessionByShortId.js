@@ -36,6 +36,8 @@ app.init = function () {
     $("#session-url").html(window.location.href);
     app.setExpirationDate();
 
+    $("#session-details").show();
+
     $("#add-member").click(function () {
         app.addMember();
     });
@@ -88,11 +90,9 @@ app.refreshUserInfo = function () {
         $("#name-info-span").html(app.currentMember.Name);
         var adminStatus = app.currentMember.IsAdmin ? "You are admin of this session" : "You are guest of this session";
         $("#admin-status").html(adminStatus);
-        $("#name-info-span").show();
         $("#name-info").show();
     } else {
         $("#enter-name").show();
-        $("#name-info-span").hide();
         $("#name-info").hide();
     }
 };
