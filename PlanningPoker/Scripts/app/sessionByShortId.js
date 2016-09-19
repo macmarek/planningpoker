@@ -288,10 +288,10 @@ app.addVote = function () {
         },
         success: function (data) {
             app.currentMember.Vote = vote;
+            app.currentMember.revoting = false;
             app.storage.setUserForSession(app.session.ShortId, app.currentMember);
             app.refreshUserVotingArea();
             chat.server.refreshMemberList(app.session.ShortId);
-            app.currentMember.revoting = false;
             $("#revote").show();
         },
         error: function () {
