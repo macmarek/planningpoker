@@ -40,7 +40,7 @@ namespace PlanningPoker.Hubs
 
         public void VotingStopped(string shortId)
         {
-            Clients.Group(shortId).votingStopped(shortId);
+            Clients.Group(shortId).votingStoppedCallback(shortId);
         }
     }
 }

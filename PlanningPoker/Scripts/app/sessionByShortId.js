@@ -11,8 +11,9 @@ app.refreshList = function () {
     for (var i = 0; i < app.session.Members.length; i++) {
         var member = app.session.Members[i];
         var num = i + 1;
+        var displayName = member.IsAdmin ? member.Name + " (admin)" : member.Name;
         var row = "<tr><td>" + num +"</td>" +
-            "<td>" + member.Name + "</td><td>";
+            "<td>" + displayName + "</td><td>";
         if (member.Vote) {
             var voteText = app.session.IsVoting ? "voted" : member.Vote;
             row += voteText;
@@ -31,6 +32,9 @@ app.init = function () {
         errorElement: "#no-storage"
     });
     app.currentMember = app.storage.getUserForSession(app.session.ShortId);
+    if (app.currentMember) {
+        app.currentMember.Vote = null;
+    }
 
     $("#session-id").html(app.session.ShortId);
     $("#session-url").val(window.location.href);
@@ -54,6 +58,10 @@ app.init = function () {
 
     $("#add-vote").click(function () {
         app.addVote();
+    });
+
+    $("#revote").click(function() {
+        app.revote();
     });
 
     app.listenForEnterFor("#vote-value", "#add-vote");
@@ -104,14 +112,11 @@ app.refreshVotingArea = function () {
         $("#session-status").show();
         $("#voting-area").show();
         $("#members-list").show();
-        $("#enter-name").hide();
-        //$("#enter-name").hide();
     } else {
         $("#start-voting").show();
         $("#stop-voting").hide();
         $("#session-status").hide();
         $("#voting-area").show();
-        //$("#enter-name").show()
     }
 };
 
@@ -140,7 +145,7 @@ app.refreshUserVotingArea = function () {
         return;
     }
 
-    if (!app.currentMember.Vote) {
+    if (!app.currentMember.Vote || app.currentMember.revoting) {
         $("#add-vote-area").show();
         $("#vote-value").focus();
         $("#vote-status-area").hide();
@@ -233,6 +238,7 @@ app.startVoting = function () {
             app.refreshVotingArea();
             app.refreshUserVotingArea();
             chat.server.votingStarted(app.session.ShortId);
+
         },
         error: function () {
             alert("error");
@@ -241,7 +247,7 @@ app.startVoting = function () {
     });
 }
 
-app.stopVoting = function () {
+app.stopVoting = function() {
     if (!app.session.IsVoting) {
         return;
     }
@@ -250,19 +256,20 @@ app.stopVoting = function () {
         type: "POST",
         url: "/api/StopVoting",
         data: { ShortId: app.session.ShortId, MemberId: app.currentMember.Id },
-        success: function (data) {
+        success: function(data) {
             app.session.IsVoting = false;
             app.refreshUserInfo();
             app.refreshVotingArea();
             app.refreshUserVotingArea();
             chat.server.refreshMemberList(app.session.ShortId);
+            chat.server.votingStopped(app.session.ShortId);
         },
-        error: function () {
+        error: function() {
             alert("error");
         },
         dataType: "json"
     });
-}
+};
 
 app.addVote = function () {
     if (!app.session.IsVoting) {
@@ -284,6 +291,8 @@ app.addVote = function () {
             app.storage.setUserForSession(app.session.ShortId, app.currentMember);
             app.refreshUserVotingArea();
             chat.server.refreshMemberList(app.session.ShortId);
+            app.currentMember.revoting = false;
+            $("#revote").show();
         },
         error: function () {
             alert("error");
@@ -291,6 +300,12 @@ app.addVote = function () {
         dataType: "json"
     });
 };
+
+app.revote = function() {
+    app.currentMember.revoting = true;
+    app.refreshUserVotingArea();
+    $("#revote").hide();
+}
 
 app.showLoading = function (message) {
     $("#loading-alert").show();
@@ -327,6 +342,18 @@ app.LocalStorageWrapper = function () {
     }
 };
 
+app.blinkTimeoutId = null;
+app.startTitleAnimation = function() {
+    app.votingTitle = "Voting ... - Planning Poker";
+    app.blinkTimeoutId = setInterval(function () {
+        document.title = document.title == app.votingTitle ? "... - Planning Poker" : app.votingTitle;
+    }, 1000);
+};
+
+app.stopTitleAnimation = function () {
+    clearInterval(app.blinkTimeoutId);
+    document.title = "Voting session - Planning Poker";
+};
 
 $(function () {
     chat = $.connection.pokerHub;
@@ -348,9 +375,17 @@ $(function () {
         app.session = data;
 
         app.currentMember.Vote = null;
+        app.currentMember.revoting = false;
         app.refreshUserInfo();
         app.refreshVotingArea();
         app.refreshUserVotingArea();
+
+        app.startTitleAnimation();
+        $("#revote").hide();
+    };
+
+    chat.client.votingStoppedCallback = function(data) {
+        app.stopTitleAnimation();
     };
 
     chat.client.addedToGoupCallback = function (data) {
