@@ -73,8 +73,15 @@ app.init = function () {
             if (!successful) {
                 alert("Unable to copy. Plase copy it manually.");
             } else {
+                $("#copy-to-cb>span").text("Copied");
                 $("#copied-to-cb").removeClass("fa-square-o");
                 $("#copied-to-cb").addClass("fa-check-square-o");
+                setTimeout(function() {
+                    $("#copy-to-cb>span").text("Copy url");
+                    $("#copied-to-cb").removeClass("fa-check-square-o");
+                    $("#copied-to-cb").addClass("fa-square-o");
+                },
+                1500);
             }
         } catch (err) {
             alert("Unable to copy. Plase copy it manually.");
@@ -392,7 +399,6 @@ $(function () {
         app.hideLoading();
         app.init();
     };
-
 
     app.showLoading("Joining session ...");
     $.connection.hub.start()

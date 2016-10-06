@@ -18,3 +18,8 @@
     margin-top: 10px;
 }
 
+#copy-to-cb {
+    min-width: 98px;
+    text-transform: uppercase;
+}
+
