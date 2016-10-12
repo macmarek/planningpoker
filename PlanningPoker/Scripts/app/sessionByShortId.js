@@ -38,6 +38,9 @@ app.init = function () {
 
     $("#session-id").html(app.session.ShortId);
     $("#session-url").val(window.location.href);
+
+    app.setQrLink();
+
     app.setExpirationDate();
 
     $("#session-details").show();
@@ -101,6 +104,14 @@ app.init = function () {
     app.refreshUserVotingArea();
 
     app.refreshVotingButtons();
+};
+
+app.setQrLink = function() {
+    var url = window.location.href;
+    var qrurl1 = "https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=" + url;
+    var qrurl2 = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" + url;
+    $("#qrlink").attr("href", qrurl2);
+    $("#qrlink>img").attr("src", qrurl1);
 };
 
 app.listenForEnterFor = function(listenOn, triggerClickOn) {
