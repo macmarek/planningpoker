@@ -146,6 +146,10 @@ app.refreshUserInfo = function () {
         $("#admin-status").html(adminStatus);
         $("#name-info").show();
     } else {
+        var lastUser = app.storage.getLastSessionUser();
+        if (lastUser) {
+            $('#member-name').val(lastUser.Name);
+        }
         $("#enter-name").show();
         $("#name-info").hide();
     }
@@ -166,6 +170,10 @@ app.refreshUserVotingArea = function () {
     if (!app.currentMember.Vote || app.currentMember.revoting) {
         $("#add-vote-area").show();
         $("#vote-value").focus();
+        var voteValue = $("#vote-value").val();
+        if (voteValue) {
+            $("#vote-value").select();
+        }
         $("#vote-status-area").hide();
     } else {
         $("#add-vote-area").hide();
@@ -205,6 +213,7 @@ app.addMember = function () {
         success: function (data) {
             app.currentMember = data;
             app.storage.setUserForSession(app.session.ShortId, data);
+            app.storage.setLastSessionUser(data);
             chat.server.refreshMemberList(app.session.ShortId);
             app.refreshUserInfo();
             app.refreshUserVotingArea();
@@ -295,6 +304,9 @@ app.addVote = function () {
     }
 
     var vote = $("#vote-value").val();
+    if (!vote) {
+        return;
+    }
 
     $.ajax({
         type: "POST",
@@ -354,10 +366,23 @@ app.LocalStorageWrapper = function () {
         return JSON.parse(itemString);
     };
 
-    this.setUserForSession = function (shortId, user) {
+    this.setUserForSession = function(shortId, user) {
         var json = JSON.stringify(user);
         localStorage.setItem(shortId + "user", json);
-    }
+    };
+
+    this.setLastSessionUser = function(user) {
+        var json = JSON.stringify(user);
+        localStorage.setItem("lastuser", json);
+    };
+
+    this.getLastSessionUser = function() {
+        var itemString = localStorage.getItem("lastuser");
+        if (!itemString) {
+            return null;
+        }
+        return JSON.parse(itemString);
+    };
 };
 
 app.blinkTimeoutId = null;
