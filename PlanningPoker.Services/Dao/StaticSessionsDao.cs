@@ -118,6 +118,17 @@ namespace PlanningPoker.Services.Dao
                 }
             }
         }
+
+        public static void ChangeTitle(Guid memberId, string shortId, string title)
+        {
+            var session = all.First(x => x.ShortId == shortId);
+            var callingMamber = GetMemberById(session, memberId);
+            if (!callingMamber.IsAdmin)
+            {
+                throw new ArgumentException("non admin can't start voting");
+            }
+            session.Title = title;
+        }
     }
 }
 

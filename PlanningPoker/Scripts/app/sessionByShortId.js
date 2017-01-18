@@ -37,11 +37,15 @@ app.init = function () {
     }
 
     $("#session-id").html(app.session.ShortId);
+
     $("#session-url").val(window.location.href);
 
+    if (app.session.Title) {
+        app.setSessionTitle(app.session.Title);
+        $('#session-title').val(app.session.Title);
+    }
+    
     app.setQrLink();
-
-    app.setExpirationDate();
 
     $("#session-details").show();
 
@@ -66,6 +70,8 @@ app.init = function () {
     $("#revote").click(function() {
         app.revote();
     });
+
+    app.setupTitleInput();
 
     app.listenForEnterFor("#vote-value", "#add-vote");
 
@@ -103,7 +109,23 @@ app.init = function () {
 
     app.refreshUserVotingArea();
 
-    app.refreshVotingButtons();
+    app.refreshAdminArea();
+};
+
+app.setupTitleInput = function() {
+
+    $('#session-title').on('input', function (e) {
+        var text = $(this).val();
+        app.setSessionTitle(text);
+        clearTimeout(app.setTitleTimeout);
+        app.setTitleTimeout = setTimeout(function() {
+            chat.server.changeTitle(app.currentMember.Id, app.session.ShortId, text);
+        }, 500);
+    });
+};
+
+app.setSessionTitle = function(title) {
+    $('#title').html(title);
 };
 
 app.setQrLink = function() {
@@ -182,18 +204,18 @@ app.refreshUserVotingArea = function () {
     }
 };
 
-app.refreshVotingButtons = function() {
+app.refreshAdminArea = function() {
     if (!app.currentMember) {
-        $("#voting-buttons").hide();
+        $("#admin-area").hide();
         return;
     }
 
     if (!app.currentMember.IsAdmin) {
-        $("#voting-buttons").hide();
+        $("#admin-area").hide();
         return;
     }
 
-    $("#voting-buttons").show();
+    $("#admin-area").show();
 };
 
 app.addMember = function () {
@@ -217,7 +239,7 @@ app.addMember = function () {
             chat.server.refreshMemberList(app.session.ShortId);
             app.refreshUserInfo();
             app.refreshUserVotingArea();
-            app.refreshVotingButtons();
+            app.refreshAdminArea();
         },
         error: function () {
             alert("could not add member");
@@ -243,11 +265,6 @@ app.removeCurrentMember = function () {
         },
         dataType: "json"
     });
-};
-
-app.setExpirationDate = function () {
-    var date = new Date(app.session.ExpireTimeUtc);
-    $("#session-expiry").html(date.toLocaleDateString() + " - " + date.toLocaleTimeString());
 };
 
 app.startVoting = function () {
@@ -434,6 +451,10 @@ $(function () {
     chat.client.addedToGoupCallback = function (data) {
         app.hideLoading();
         app.init();
+    };
+
+    chat.client.changedTitleCallback = function(title) {
+        app.setSessionTitle(title);
     };
 
     app.showLoading("Joining session ...");

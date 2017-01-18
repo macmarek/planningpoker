@@ -9,6 +9,8 @@
     </div>
 </div>
 
+
+
 <div id="loading-alert" style="display: none" class="alert alert-info" role="alert">
     <span id="loading-message"></span>
 </div>
@@ -18,7 +20,12 @@
 <div id="main-wrapper" style="display: none;">
 
     <div class="row">
+        
         <div class="col-md-7">
+
+            <div class="row">
+                <h2 id="title"></h2>
+            </div>
 
             <div class="row" id="enter-name">
                 <div class="col-md-6">
@@ -42,9 +49,9 @@
                     <div id="add-vote-area">
 
                         <div class="panel panel-default">
-                            <div class="panel-heading">
+                            @*<div class="panel-heading">
                                 <h3 class="panel-title">Vote here</h3>
-                            </div>
+                            </div>*@
                             <div class="panel-body">
                                 <fieldset>
                                     <div class="form-group">
@@ -73,48 +80,67 @@
 
                         <table class="table">
                             <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>name</th>
-                                    <th>vote</th>
-                                </tr>
+                            <tr>
+                                <th>#</th>
+                                <th>name</th>
+                                <th>vote</th>
+                            </tr>
                             </thead>
                             <tbody id="members-list"></tbody>
                         </table>
 
                     </div>
                 </div>
-                <div class="row" id="voting-buttons">
-                    <div class="col-md-6">
-                        <button id="start-voting" class="btn btn-lg btn-secondary btn-block">Let's vote!</button>
-                        <button id="stop-voting" style="display: none" class="btn btn-lg btn-secondary btn-block">Show results</button>
-                    </div>
-                </div>
             </div>
-
-
         </div>
 
         <div class="col-md-5" id="session-details" style="display: none;">
-            <div class="card">
-            <h3 class="card-header primary-color white-text">Session details</h3>
-            <div class="card-block">
-                <h4>Session <span id="session-id"></span></h4>
-                <p>This session wil expire <span id="session-expiry"></span></p>
-                <p>
-                    <label>Session url</label>
-                    <input value="" type="text" id="session-url" class="form-control">
 
-                    <button id="copy-to-cb" type="button" class="btn btn-sm btn-elegant">
-                        <i id="copied-to-cb" class="fa fa-square-o left"></i> <span>Copy url</span>
-                    </button>
-                </p>
-                <p>
-                    <a id="qrlink" href="#" target="_blank"><img /></a>
-                </p>
+            <div class="card" id="admin-area" style="display: none">
+                <h3 class="card-header primary-color white-text">Admin area</h3>
+
+                <div class="card-block">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <fieldset>
+                                <div class="form-group">
+                                    <label for="session-title">Voting subject</label>
+                                    <input type="text" class="form-control" id="session-title" placeholder="Please enter voting subject ..." maxlength="150" required>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-block">
+                    <div id="voting-buttons">
+                        <div>
+                            <button id="start-voting" class="btn btn-lg btn-secondary btn-block">Let's vote!</button>
+                            <button id="stop-voting" style="display: none" class="btn btn-lg btn-secondary btn-block">Show results</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </div>
-            
+
+            <div class="card">
+                <h3 class="card-header primary-color white-text">Session details</h3>
+                <div class="card-block">
+                    <h4>Session <span id="session-id"></span></h4>
+                    <p>
+                        <label>Session url</label>
+                        <input value="" type="text" id="session-url" class="form-control">
+
+                        <button id="copy-to-cb" type="button" class="btn btn-sm btn-elegant">
+                            <i id="copied-to-cb" class="fa fa-square-o left"></i> <span>Copy url</span>
+                        </button>
+                    </p>
+                    <p>
+                        <a id="qrlink" href="#" target="_blank"><img/></a>
+                    </p>
+                </div>
+            </div>
+
             <div class="card" id="name-info" style="display: none">
                 <h3 class="card-header primary-color white-text">User details</h3>
                 <div class="card-block">
@@ -123,6 +149,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
 </div>

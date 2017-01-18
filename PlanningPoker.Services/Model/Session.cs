@@ -9,6 +9,7 @@ namespace PlanningPoker.Services.Model
         public string ShortId { get; set; }
         public DateTime ExpireTimeUtc { get; set; }
         public bool IsVoting { get; set; }
+        public string Title { get; set; }
 
         public List<TeamMember> Members { get; set; }
     }

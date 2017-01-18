@@ -42,5 +42,11 @@ namespace PlanningPoker.Hubs
         {
             Clients.Group(shortId).votingStoppedCallback(shortId);
         }
+
+        public void ChangeTitle(Guid memberId, string shortId, string title)
+        {
+            StaticSessionsDao.ChangeTitle(memberId, shortId, title);
+            Clients.Group(shortId).changedTitleCallback(title);
+        }
     }
 }
