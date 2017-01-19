@@ -47,6 +47,8 @@ app.init = function () {
     
     app.setQrLink();
 
+    app.setupPokerButtons();
+
     $("#session-details").show();
 
     $("#add-member").click(function () {
@@ -191,6 +193,7 @@ app.refreshUserVotingArea = function () {
 
     if (!app.currentMember.Vote || app.currentMember.revoting) {
         $("#add-vote-area").show();
+        $('#voting-options').show();
         $("#vote-value").focus();
         var voteValue = $("#vote-value").val();
         if (voteValue) {
@@ -199,6 +202,7 @@ app.refreshUserVotingArea = function () {
         $("#vote-status-area").hide();
     } else {
         $("#add-vote-area").hide();
+        $('#voting-options').hide();
         $("#current-vote-value").html(app.currentMember.Vote);
         $("#vote-status-area").show();
     }
@@ -413,6 +417,22 @@ app.startTitleAnimation = function() {
 app.stopTitleAnimation = function () {
     clearInterval(app.blinkTimeoutId);
     document.title = "Voting session - Planning Poker";
+};
+
+app.setupPokerButtons = function() {
+    var options = ["0", "1/2", "1", "2", "3", "5", "8", "13", "20", "40", "100", "?", "coffe"];
+
+    for (var i = 0; i < options.length; i++) {
+        var o = options[i];
+        $("#voting-options").append('<button type="button" class="btn btn-default vote-button">' + o + '</button>');
+    }
+
+    $(".vote-button").click(function() {
+        var vote = $(this).text();
+        $("#vote-value").val(vote);
+        app.addVote();
+    });
+
 };
 
 $(function () {
