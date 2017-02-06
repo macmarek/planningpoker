@@ -44,10 +44,12 @@ app.init = function () {
         app.setSessionTitle(app.session.Title);
         $('#session-title').val(app.session.Title);
     }
-    
+
     app.setQrLink();
 
     app.setupPokerButtons();
+
+    app.initVotingButtonsCheckBox();
 
     $("#session-details").show();
 
@@ -193,7 +195,7 @@ app.refreshUserVotingArea = function () {
 
     if (!app.currentMember.Vote || app.currentMember.revoting) {
         $("#add-vote-area").show();
-        $('#voting-options').show();
+        app.refreshVotingOptions(app.session.UseVotingButtons);
         $("#vote-value").focus();
         var voteValue = $("#vote-value").val();
         if (voteValue) {
@@ -202,7 +204,7 @@ app.refreshUserVotingArea = function () {
         $("#vote-status-area").hide();
     } else {
         $("#add-vote-area").hide();
-        $('#voting-options').hide();
+        app.refreshVotingOptions(app.session.UseVotingButtons);
         $("#current-vote-value").html(app.currentMember.Vote);
         $("#vote-status-area").show();
     }
@@ -432,7 +434,33 @@ app.setupPokerButtons = function() {
         $("#vote-value").val(vote);
         app.addVote();
     });
+};
 
+app.initVotingButtonsCheckBox = function() {
+    if (app.session.UseVotingButtons) {
+        $('#use-voting-buttons').prop('checked', true);
+    } else {
+        $('#use-voting-buttons').prop('checked', false);
+    }
+
+    $('#use-voting-buttons').change(function () {
+        var checked = $(this).prop('checked');
+        if (checked) {
+            app.session.UseVotingButtons = true;
+        } else {
+            app.session.UseVotingButtons = false;
+        }
+        chat.server.changeUseVotingButtons(app.currentMember.Id, app.session.ShortId, checked);
+        app.refreshVotingOptions(checked);
+    });
+};
+
+app.refreshVotingOptions = function(showButtons) {
+    if (showButtons) {
+        $("#voting-options").show();
+    } else {
+        $("#voting-options").hide();
+    }
 };
 
 $(function () {
@@ -475,6 +503,10 @@ $(function () {
 
     chat.client.changedTitleCallback = function(title) {
         app.setSessionTitle(title);
+    };
+
+    chat.client.changedUseVotingButtonsCallback = function (value) {
+        app.refreshVotingOptions(value);
     };
 
     app.showLoading("Joining session ...");

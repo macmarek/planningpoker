@@ -27,7 +27,8 @@ namespace PlanningPoker.Services.Dao
                 Id = Guid.NewGuid(),
                 ExpireTimeUtc = DateTime.UtcNow.AddHours(1),
                 ShortId = RandomIdGenerator.GetBase62(8),
-                Members = new List<TeamMember>()
+                Members = new List<TeamMember>(),
+                UseVotingButtons = true
             };
             all.Add(session);
 
@@ -128,6 +129,17 @@ namespace PlanningPoker.Services.Dao
                 throw new ArgumentException("non admin can't start voting");
             }
             session.Title = title;
+        }
+
+        public static void ChangeUseVotingButtons(Guid memberId, string shortId, bool value)
+        {
+            var session = all.First(x => x.ShortId == shortId);
+            var callingMamber = GetMemberById(session, memberId);
+            if (!callingMamber.IsAdmin)
+            {
+                throw new ArgumentException("non admin can't start voting");
+            }
+            session.UseVotingButtons = value;
         }
     }
 }
