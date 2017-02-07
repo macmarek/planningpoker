@@ -204,7 +204,7 @@ app.refreshUserVotingArea = function () {
         $("#vote-status-area").hide();
     } else {
         $("#add-vote-area").hide();
-        app.refreshVotingOptions(app.session.UseVotingButtons);
+        app.refreshVotingOptions(false);
         $("#current-vote-value").html(app.currentMember.Vote);
         $("#vote-status-area").show();
     }
@@ -452,11 +452,16 @@ app.initVotingButtonsCheckBox = function() {
         }
         chat.server.changeUseVotingButtons(app.currentMember.Id, app.session.ShortId, checked);
         app.refreshVotingOptions(checked);
+        
     });
 };
 
 app.refreshVotingOptions = function(showButtons) {
-    if (showButtons) {
+    if (!app.session.IsVoting) {
+        return;
+    }
+    var shouldShowVotingInput = !app.currentMember.Vote || app.currentMember.revoting;
+    if (shouldShowVotingInput && showButtons) {
         $("#voting-options").show();
     } else {
         $("#voting-options").hide();
